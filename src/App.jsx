@@ -1,10 +1,20 @@
-import "./App.css";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
 import HomePage from "./pages/HomePage";
 import Signup from "./pages/Auth/Signup";
 import Login from "./pages/Auth/Login";
+import JobsAds from "./pages/JobsAds";
+import Shorts from "./pages/Shorts";
+import Payment from "./pages/Payment";
 import Navbar from "./components/Navbar";
-import Anon from "./components/Anon";
+import PrivateRoute from "./components/Private";
+import AnonRoute from "./components/Anon";
+import Activity from "./components/Activity";
+import Preview from "./pages/Preview";
+import VacancyRequired from "./pages/VacancyRequired";
+import GenerateVideo from "./pages/GenerateVideo";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   return (
@@ -18,17 +28,62 @@ function App() {
         <Route
           path="/signup"
           element={
-            <Anon>
+            <AnonRoute>
               <Signup />
-            </Anon>
+            </AnonRoute>
           }
         />
         <Route
           path="/login"
           element={
-            <Anon>
+            <AnonRoute>
               <Login />
-            </Anon>
+            </AnonRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={<ProfilePage />}
+        />
+
+        <Route
+          path="/activity"
+          element={<Activity />}
+        />
+        <Route
+          path="/preview/:videoId"
+          element={<Preview />}
+        />
+        <Route
+          path="/vacancy-required/:jobId"
+          element={<VacancyRequired />}
+        />
+        <Route
+          path="/jobs-ads"
+          element={
+            <PrivateRoute>
+              <JobsAds />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/shorts"
+          element={
+            <PrivateRoute>
+              <Shorts />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/generate-video/:jobId"
+          element={<GenerateVideo />}
+        />
+        <Route
+          path="/payment"
+          element={
+            <PrivateRoute>
+              <Payment />
+            </PrivateRoute>
           }
         />
       </Routes>

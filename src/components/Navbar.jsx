@@ -6,43 +6,29 @@ const Navbar = () => {
   const { user, loading, logout } = useContext(AuthContext);
   return (
     <nav className="Navbar">
-      <p>{user ? user.username : "Nepshopy"}</p>
+      <p>{user ? user.username : ""}</p>
       {user && (
         <img
           src={user.profilePic}
           height={70}
+          alt="Profile"
         />
       )}
       <ul>
         <NavLink
-          className={({ isAtive }) => (isAtive ? "selected" : "")}
+          className={({ isActive }) => (isActive ? "selected" : "")}
           to="/">
           Home
         </NavLink>
-        {/*         <NavLink
-          className={({ isAtive }) => (isAtive ? "selected" : "")}
-          to="/about">
-          About
-        </NavLink> */}
-        {/*         {user ? (
-          <Link to="/projects">
-            //
-            <button>
-              <Projects></Projects>
-            </button>
-          </Link>
-        ) : (
-          <>
-            <Link to="/signup">
-            Signup</Link>
-            <Link to="/login">Login</Link>
-          </>
-        )} */}
+        {user && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "selected" : "")}
+            to="/profile">
+            Profile
+          </NavLink>
+        )}
         {!loading && user && (
           <>
-            {/*             <Link to="/projects">
-              <button>Projects</button>
-            </Link> */}
             <button onClick={logout}>Logout</button>
           </>
         )}
