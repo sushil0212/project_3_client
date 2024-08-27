@@ -1,7 +1,7 @@
 // src/pages/GenerateVideo.jsx
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/auth.context";
 
 function GenerateVideo() {
@@ -11,6 +11,7 @@ function GenerateVideo() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const storedToken = localStorage.getItem("authToken");
+  const { jobId } = useParams();
 
   const handleRoleChange = (index, e) => {
     const newRoles = [...roles];
@@ -22,11 +23,11 @@ function GenerateVideo() {
     setRoles([...roles, { role: "", quantity: "" }]);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/generate-video`,
+        `${import.meta.env.VITE_API_URL}/api/generate-video/${jobId}`,
         { roles },
         {
           headers: {
@@ -70,7 +71,11 @@ function GenerateVideo() {
             />
           </div>
         ))}
-        <button type="button" onClick={addRole}>Add Role</button>
+        <button
+          type="button"
+          onClick={addRole}>
+          Add Role
+        </button>
         <button type="submit">Generate Video</button>
       </form>
       {videoUrl && (

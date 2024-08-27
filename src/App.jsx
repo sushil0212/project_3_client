@@ -15,6 +15,10 @@ import Preview from "./pages/Preview";
 import VacancyRequired from "./pages/VacancyRequired";
 import GenerateVideo from "./pages/GenerateVideo";
 import ProfilePage from "./components/ProfilePage";
+import DetailsPage from "./pages/DetailsPage";
+import Notifications from "./pages/Notifications";
+
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -45,7 +49,6 @@ function App() {
           path="/profile"
           element={<ProfilePage />}
         />
-
         <Route
           path="/activity"
           element={<Activity />}
@@ -79,10 +82,36 @@ function App() {
           element={<GenerateVideo />}
         />
         <Route
+          path="/shorts/:shortId"
+          element={
+            <PrivateRoute>
+              <DetailsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/payment"
           element={
             <PrivateRoute>
               <Payment />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <PrivateRoute>
+              <Notifications />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
             </PrivateRoute>
           }
         />

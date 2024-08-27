@@ -107,33 +107,13 @@ function VacancyRequired() {
           value={experience}
           onChange={e => setExperience(e.target.value)}
         />
-        {/* <div>
-          {vacancies.map((vacancy, index) => (
-            <div key={index}>
-              <label htmlFor={`role-${index}`}>Role</label>
-              <input
-                type="text"
-                id={`role-${index}`}
-                name="role"
-                value={vacancy.role}
-                onChange={e => handleVacanciesChange(index, e)}
-              />
-              <label htmlFor={`quantity-${index}`}>Quantity</label>
-              <input
-                type="text"
-                id={`quantity-${index}`}
-                name="quantity"
-                value={vacancy.quantity}
-                onChange={e => handleVacanciesChange(index, e)}
-              />
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={addVacancy}>
-            Add Vacancy
-          </button>
-        </div> */}
+        <label htmlFor="experience">Vacancies</label>
+        <input
+          type="number"
+          id="vacancies"
+          value={vacancies}
+          onChange={e => setVacancies(e.target.value)}
+        />
         <button type="submit">Submit</button>
       </form>
     </div>

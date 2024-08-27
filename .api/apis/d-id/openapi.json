@@ -1,0 +1,4181 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Resources Endpoints",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "https://api.d-id.com/"
+    }
+  ],
+  "paths": {
+    "/images": {
+      "post": {
+        "operationId": "Upload an image",
+        "responses": {
+          "201": {
+            "description": "The image has been uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "The temporary URL of the image.\nThis URL should be provided when creating an animation via the /animations endpoint."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "A unique identifier which represents this image operation"
+                    },
+                    "faces": {
+                      "items": {
+                        "properties": {
+                          "size": {
+                            "type": "integer",
+                            "format": "int32",
+                            "description": "Size of the square side",
+                            "minimum": 0
+                          },
+                          "top_left": {
+                            "items": {
+                              "type": "integer",
+                              "format": "int32"
+                            },
+                            "type": "array",
+                            "description": "Top left location of the face in the frame - can be negative",
+                            "minItems": 2,
+                            "maxItems": 2
+                          },
+                          "overlap": {
+                            "enum": [
+                              "NO",
+                              "PARTIAL",
+                              "YES",
+                              "UNKNOWN"
+                            ],
+                            "type": "string"
+                          },
+                          "face_id": {
+                            "type": "string"
+                          },
+                          "detect_confidence": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "sharpness": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "face_occluded": {
+                            "type": "boolean"
+                          },
+                          "face_occluded_confidence": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "detection": {
+                            "properties": {
+                              "top": {
+                                "type": "number",
+                                "format": "double"
+                              },
+                              "left": {
+                                "type": "number",
+                                "format": "double"
+                              },
+                              "bottom": {
+                                "type": "number",
+                                "format": "double"
+                              },
+                              "right": {
+                                "type": "number",
+                                "format": "double"
+                              }
+                            },
+                            "required": [
+                              "top",
+                              "left",
+                              "bottom",
+                              "right"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "size",
+                          "top_left"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "url"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "tn8607bms7"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequestError | InvalidFileSizeError | InvalidImageResolutionError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "BadRequestError",
+                      "description": "invalid image"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "InsufficientCreditsError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "InsufficientCreditsError",
+                      "description": "not enough credits"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UnsupportedMimeTypeError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "UnsupportedMimeTypeError",
+                      "description": "The provided mime type is not supported",
+                      "details": {
+                        "received": "image/png",
+                        "supported": [
+                          "image/jpeg"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "451": {
+            "description": "ImageModerationError | CelebrityRecognizedError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "ImageModerationError",
+                      "description": "Automatic content moderation - contact support if you would like to submit for manual review"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Upload an image to a temporary storage before creating an animation.\nThe image is uploaded using multipart/form-data. the filename directive is optional and if provided should contain up to 50 valid characters long.\nValid characters: a-z A-Z 0-9 . _ -\nSupported mime types: image/jpeg,image/png\nStorage duration: 24-48H",
+        "summary": "Upload image",
+        "tags": [
+          "Images"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The binary data of the image"
+                  },
+                  "detect_faces": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "string"
+                  },
+                  "source_url": {
+                    "type": "string"
+                  },
+                  "result_url": {
+                    "type": "string",
+                    "description": "A URL to upload the image to. If provided, the image will be uploaded to this URL instead of the default bucket. Should be an https presigned URL. S3 presigned urls should have the putObject permission with content type matching the uploaded image."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/images/{id}": {
+      "delete": {
+        "operationId": "DeleteImage",
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFoundError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "NotFoundError",
+                      "description": "image not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete image",
+        "tags": [
+          "Images"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/images/face-detection": {
+      "post": {
+        "operationId": "Get face detection",
+        "responses": {
+          "200": {
+            "description": "The face has been detected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "faceCrops": {
+                      "items": {
+                        "properties": {
+                          "top": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "left": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "bottom": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "right": {
+                            "type": "number",
+                            "format": "double"
+                          }
+                        },
+                        "required": [
+                          "top",
+                          "left",
+                          "bottom",
+                          "right"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array"
+                    },
+                    "metadata": {
+                      "properties": {
+                        "length": {
+                          "type": "number",
+                          "format": "double"
+                        },
+                        "height": {
+                          "type": "number",
+                          "format": "double"
+                        },
+                        "width": {
+                          "type": "number",
+                          "format": "double"
+                        }
+                      },
+                      "required": [
+                        "length",
+                        "height",
+                        "width"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "faceCrops",
+                    "metadata"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "faceCrops": [
+                        {
+                          "left": 0.1,
+                          "top": 0.1,
+                          "right": 0.9,
+                          "bottom": 0.9
+                        }
+                      ],
+                      "metadata": {
+                        "width": 1920,
+                        "height": 1080,
+                        "length": 3
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequestError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "BadRequestError",
+                      "description": "invalid image"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFoundError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "NotFoundError",
+                      "description": "image not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UnsupportedMimeTypeError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "UnsupportedMimeTypeError",
+                      "description": "The provided mime type is not supported",
+                      "details": {
+                        "received": "image/png",
+                        "supported": [
+                          "image/jpeg"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get face detection",
+        "tags": [
+          "Images"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "source_url": {
+                    "type": "string"
+                  },
+                  "should_skip_detection": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "source_url"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audios": {
+      "post": {
+        "operationId": "Upload an audio",
+        "responses": {
+          "201": {
+            "description": "The audio has been uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "The temporary URL of the audio.\nThis URL should be provided when creating an animation via the /animations endpoint."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "A unique identifier for the audio.\nThis identifier should be used when deleting the audio via the /audio/{id} endpoint."
+                    },
+                    "duration": {
+                      "type": "number",
+                      "format": "double",
+                      "description": "The duration of the audio in seconds"
+                    },
+                    "moderation_metadata": {
+                      "description": "The audio moderation results metadata.",
+                      "properties": {},
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "url"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "DE8sPnUCMg7MBcFJisx5Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequestError | InvalidFileSizeError | InvalidAudioDurationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "BadRequestError",
+                      "description": "invalid audio"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "InsufficientCreditsError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "InsufficientCreditsError",
+                      "description": "not enough credits"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UnsupportedMimeTypeError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "UnsupportedMimeTypeError",
+                      "description": "The provided mime type is not supported",
+                      "details": {
+                        "received": "image/jpg",
+                        "supported": [
+                          "audio/*",
+                          "video/*"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "451": {
+            "description": "AudioModerationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AudioModerationError",
+                      "description": "Automatic audio moderation failed - Please try a different audio file"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Upload an audio file to a temporary storage before creating an animation.\nThe audio is uploaded using multipart/form-data. the filename directive is optional and if provided should contain up to 50 valid characters long.\nThe resulting file is stored as a .wav file in a 16kHz sample rate.\nValid characters: a-z A-Z 0-9 . _ -\nSupported mime types: \"audio/, video/\"\nStorage duration: 24-48H",
+        "summary": "Upload audio file",
+        "tags": [
+          "Audios"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "audio": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The uploaded audio file, the file must not exceed 6MB in size."
+                  },
+                  "source_url": {
+                    "type": "string"
+                  },
+                  "result_url": {
+                    "type": "string",
+                    "description": "A URL to upload the audio to. If provided, the audio will be uploaded to this URL instead of the default bucket. https presigned URL supported. S3 presigned urls should have the putObject permission with content type audio/wav."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audios/{id}": {
+      "delete": {
+        "operationId": "DeleteAudio",
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFoundError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "NotFoundError",
+                      "description": "audio not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete an audio file",
+        "tags": [
+          "Audios"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "The id of the audio file",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/audios/tts": {
+      "post": {
+        "operationId": "Upload an audio1",
+        "responses": {
+          "201": {
+            "description": "The audio has been uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "The temporary URL of the audio.\nThis URL should be provided when creating an animation via the /animations endpoint."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "A unique identifier for the audio.\nThis identifier should be used when deleting the audio via the /audio/{id} endpoint."
+                    },
+                    "duration": {
+                      "type": "number",
+                      "format": "double",
+                      "description": "The duration of the audio in seconds"
+                    },
+                    "moderation_metadata": {
+                      "description": "The audio moderation results metadata.",
+                      "properties": {},
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "url"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "DE8sPnUCMg7MBcFJisx5Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequestError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "BadRequestError",
+                      "description": "invalid tts script"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "451": {
+            "description": "AudioModerationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AudioModerationError",
+                      "description": "Automatic audio moderation failed - Please try a script"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Upload text\nStorage duration: 24-48H",
+        "summary": "Upload audio file",
+        "tags": [
+          "Audios"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "script": {
+                    "description": "The script to be converted to audio.",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "text"
+                        ],
+                        "nullable": false,
+                        "description": "The type of the script."
+                      },
+                      "subtitles": {
+                        "type": "boolean",
+                        "description": "Should subtitles be created.",
+                        "default": "false"
+                      },
+                      "provider": {
+                        "description": "text-to-speech provider from list of supported providers. default is microsoft tts",
+                        "anyOf": [
+                          {
+                            "description": "AzureMicrosoft provider details, contains the provider type and requested voice id and style",
+                            "properties": {
+                              "type": {
+                                "enum": [
+                                  "microsoft"
+                                ],
+                                "type": "string"
+                              },
+                              "voice_id": {
+                                "type": "string",
+                                "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/microsoft-azure",
+                                "example": "en-US-JennyNeural",
+                                "default": "en-US-JennyNeural"
+                              },
+                              "voice_config": {
+                                "description": "Voice customization options",
+                                "properties": {
+                                  "style": {
+                                    "type": "string",
+                                    "description": "The style of the voice.\nAvailable styles change between voices."
+                                  },
+                                  "rate": {
+                                    "type": "string",
+                                    "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                                    "example": "0.5"
+                                  },
+                                  "pitch": {
+                                    "type": "string",
+                                    "description": "The pitch of the voice.\nValue could be an absolute value in Hz (including units), a relative value in Hz or st(semitones)\nor a constant value from x-low/low/medium/high/x-high.",
+                                    "example": "+2st"
+                                  }
+                                },
+                                "type": "object",
+                                "additionalProperties": false
+                              },
+                              "language": {
+                                "type": "string",
+                                "description": "Voice customization options. To save the language of the selected agent voice",
+                                "example": "English (United States)"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "voice_id"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          {
+                            "description": "Afflorithmics provider details, contains the provider type and requested voice id, available for enterprise users.",
+                            "properties": {
+                              "type": {
+                                "enum": [
+                                  "afflorithmics"
+                                ],
+                                "type": "string"
+                              },
+                              "voice_id": {
+                                "type": "string",
+                                "description": "The voice_id from the list of available voices.",
+                                "example": "abc123DEF456",
+                                "default": "abc123DEF456"
+                              },
+                              "voice_config": {
+                                "description": "Voice customization options. Read more here: https://docs.audiostack.ai/reference/postspeech",
+                                "properties": {
+                                  "rate": {
+                                    "type": "string",
+                                    "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                                    "example": "1.2",
+                                    "default": "1"
+                                  },
+                                  "silencePadding": {
+                                    "type": "number",
+                                    "format": "double",
+                                    "description": "Amount of microseconds for silence padding. Half of the amount is inserted as silence at the beginning and at the end of each Speech file."
+                                  },
+                                  "voiceIntelligence": {
+                                    "type": "boolean",
+                                    "description": "Flag to apply lexicographical text corrections"
+                                  }
+                                },
+                                "type": "object",
+                                "additionalProperties": false
+                              },
+                              "language": {
+                                "type": "string",
+                                "description": "Voice customization options. To save the language of the selected agent voice",
+                                "example": "English (United States)"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "voice_id"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          {
+                            "description": "Elevenlabs provider details, contains the provider type and requested voice id, available for premium users.",
+                            "properties": {
+                              "type": {
+                                "enum": [
+                                  "elevenlabs"
+                                ],
+                                "type": "string"
+                              },
+                              "voice_id": {
+                                "type": "string",
+                                "description": "The voice_id from the list of available voices. https://api.elevenlabs.io/v1/voices.",
+                                "example": "21m00Tcm4TlvDq8ikWAM",
+                                "default": "21m00Tcm4TlvDq8ikWAM"
+                              },
+                              "voice_config": {
+                                "description": "Voice customization options. Read more here: https://docs.elevenlabs.io/speech-synthesis/voice-settings",
+                                "properties": {
+                                  "stability": {
+                                    "type": "number",
+                                    "format": "double",
+                                    "description": "How stable the voice is and the randomness of each new generation.",
+                                    "example": "0"
+                                  },
+                                  "similarity_boost": {
+                                    "type": "number",
+                                    "format": "double",
+                                    "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it.",
+                                    "example": "0"
+                                  }
+                                },
+                                "type": "object",
+                                "additionalProperties": false
+                              },
+                              "model_id": {
+                                "type": "string",
+                                "description": "The model id from the list of available models. https://elevenlabs.io/docs/speech-synthesis/models.",
+                                "example": "eleven_multilingual_v2",
+                                "default": "eleven_multilingual_v2"
+                              },
+                              "shouldAddDefaultOutputFormat": {
+                                "type": "boolean",
+                                "description": "Add default outputformat to the stream request if true"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "voice_id"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          {
+                            "description": "Amazon provider details, contains the provider type and requested voice id",
+                            "properties": {
+                              "type": {
+                                "enum": [
+                                  "amazon"
+                                ],
+                                "type": "string"
+                              },
+                              "voice_id": {
+                                "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/text-to-speech-providers",
+                                "example": "Joanna",
+                                "type": "string",
+                                "enum": [
+                                  "Amy",
+                                  "Aria",
+                                  "Ayanda",
+                                  "Bianca",
+                                  "Brian",
+                                  "Camila",
+                                  "Emma",
+                                  "Gabrielle",
+                                  "Ivy",
+                                  "Joanna",
+                                  "Joey",
+                                  "Justin",
+                                  "Kendra",
+                                  "Kevin",
+                                  "Kimberly",
+                                  "Lea",
+                                  "Lucia",
+                                  "Lupe",
+                                  "Matthew",
+                                  "Olivia",
+                                  "Salli",
+                                  "Seoyeon",
+                                  "Takumi",
+                                  "Vicki"
+                                ],
+                                "nullable": false
+                              },
+                              "language": {
+                                "type": "string",
+                                "description": "Voice customization options. To save the language of the selected agent voice",
+                                "example": "English (United States)"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "voice_id"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": [
+                                  "google"
+                                ],
+                                "type": "string"
+                              },
+                              "voice_id": {
+                                "type": "string",
+                                "description": "The voice_id from the list of available voices.",
+                                "example": "he-IL-Wavenet-A",
+                                "default": "he-IL-Wavenet-A"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "voice_id"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": [
+                                  "playHT"
+                                ],
+                                "type": "string"
+                              },
+                              "voice_id": {
+                                "type": "string",
+                                "description": "The voice_id from the list of available voices.",
+                                "example": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json",
+                                "default": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "voice_id"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "input": {
+                        "type": "string",
+                        "description": "The input text that will be synthesized to an audio file.\nNote that each provider has its own limitations on the text length.",
+                        "example": "This is an example text",
+                        "maxLength": 40000,
+                        "minLength": 3
+                      },
+                      "ssml": {
+                        "type": "boolean",
+                        "description": "Is the text provided in ssml form.",
+                        "default": "false"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "input"
+                    ],
+                    "type": "object",
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "script"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/credits": {
+      "get": {
+        "operationId": "GetCredits",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "credits": {
+                      "items": {
+                        "properties": {
+                          "owner_id": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "modified_at": {
+                            "type": "string"
+                          },
+                          "remaining": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "total": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "expire_at": {
+                            "type": "string"
+                          },
+                          "valid_from": {
+                            "type": "string"
+                          },
+                          "product_id": {
+                            "type": "string"
+                          },
+                          "price_id": {
+                            "type": "string"
+                          },
+                          "plan_group": {
+                            "type": "string"
+                          },
+                          "product_billing_interval": {
+                            "type": "string",
+                            "enum": [
+                              "month",
+                              "year"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "owner_id",
+                          "created_at",
+                          "modified_at",
+                          "remaining",
+                          "total",
+                          "expire_at"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array"
+                    },
+                    "remaining": {
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "total": {
+                      "type": "number",
+                      "format": "double"
+                    }
+                  },
+                  "required": [
+                    "credits",
+                    "remaining",
+                    "total"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "credits": [
+                        {
+                          "owner_id": "52907745-7672-470e-a803-a2f8feb52944",
+                          "remaining": 10000,
+                          "total": 10000,
+                          "expire_at": "2022-11-01T08:04:43.587Z"
+                        }
+                      ],
+                      "remaining": 10000,
+                      "total": 10000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFoundError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "NotFoundError",
+                      "description": "not credits found for user"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Get the user's credits items each credit item contains the remaining and total credits for the user\nWith the time expiration of the credits",
+        "summary": "Get credits",
+        "tags": [
+          "Credits"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": []
+      }
+    },
+    "/settings/logo": {
+      "get": {
+        "operationId": "GetLogo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "position": {
+                          "items": {
+                            "type": "number",
+                            "format": "double"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "url",
+                        "position"
+                      ],
+                      "type": "object",
+                      "additionalProperties": false
+                    }
+                  ],
+                  "nullable": true
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "url": "logo_url.com",
+                      "position": [
+                        0,
+                        0
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get logo",
+        "tags": [
+          "Settings"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": []
+      },
+      "post": {
+        "operationId": "UploadLogo",
+        "responses": {
+          "201": {
+            "description": "The image has been uploaded successfully"
+          },
+          "400": {
+            "description": "BadRequestError | InvalidFileSizeError | InvalidImageResolutionError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "BadRequestError",
+                      "description": "invalid image"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "The image being uploaded is not supported",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "UnsupportedMimeTypeError",
+                      "description": "The provided mime type is not supported",
+                      "details": {
+                        "received": "image/gif"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Upload logo",
+        "tags": [
+          "Settings"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "logo": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "top": {
+                    "type": "string"
+                  },
+                  "left": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "logo",
+                  "top",
+                  "left"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteLogo",
+        "responses": {
+          "204": {
+            "description": "The image has been deleted successfully"
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete logo",
+        "tags": [
+          "Settings"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": []
+      }
+    },
+    "/tts/voices": {
+      "get": {
+        "operationId": "Voices",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "gender": {
+                        "type": "string"
+                      },
+                      "locale": {
+                        "type": "string"
+                      },
+                      "access": {
+                        "enum": [
+                          "public",
+                          "premium",
+                          "private",
+                          "external-private"
+                        ],
+                        "type": "string"
+                      },
+                      "provider": {
+                        "enum": [
+                          "amazon",
+                          "microsoft",
+                          "afflorithmics",
+                          "elevenlabs",
+                          "google",
+                          "playHT"
+                        ],
+                        "type": "string"
+                      },
+                      "styles": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "language": {
+                        "type": "string"
+                      },
+                      "accent": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "age": {
+                        "type": "string"
+                      },
+                      "useCase": {
+                        "type": "string"
+                      },
+                      "previewUrl": {
+                        "type": "string"
+                      },
+                      "config": {}
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "gender",
+                      "locale",
+                      "access",
+                      "provider",
+                      "styles",
+                      "language"
+                    ],
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Voices",
+        "tags": [
+          "Voices"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "filter by provider",
+            "in": "query",
+            "name": "provider",
+            "required": false,
+            "schema": {
+              "enum": [
+                "amazon",
+                "microsoft",
+                "afflorithmics",
+                "elevenlabs",
+                "google",
+                "playHT"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "filter by voice id (id is unique per provider)",
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "CloneVoice",
+        "responses": {
+          "201": {
+            "description": "The voice has been cloned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "voiceId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "voiceId"
+                  ],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Add a new voice to your collection of voices. Upload audio or video file to clone the voice from.\nFor optimal voice cloning results, you should provide at least 30 seconds of diverse high-quality audio samples.",
+        "summary": "Clone Voice",
+        "tags": [
+          "Voices"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "source_url": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "language"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tts/voices/{id}": {
+      "delete": {
+        "operationId": "Delete",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "AuthorizationError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "details": {}
+                  },
+                  "required": [
+                    "kind",
+                    "description"
+                  ],
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "kind": "AuthorizationError",
+                      "description": "user unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Delete clone voice based on voice id",
+        "summary": "Delete Voice",
+        "tags": [
+          "Voices"
+        ],
+        "security": [
+          {
+            "basic": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OverlapKind": {
+        "enum": [
+          "NO",
+          "PARTIAL",
+          "YES",
+          "UNKNOWN"
+        ],
+        "type": "string"
+      },
+      "Rect": {
+        "properties": {
+          "top": {
+            "type": "number",
+            "format": "double"
+          },
+          "left": {
+            "type": "number",
+            "format": "double"
+          },
+          "bottom": {
+            "type": "number",
+            "format": "double"
+          },
+          "right": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "top",
+          "left",
+          "bottom",
+          "right"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "FaceSquare": {
+        "properties": {
+          "size": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Size of the square side",
+            "minimum": 0
+          },
+          "top_left": {
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "type": "array",
+            "description": "Top left location of the face in the frame - can be negative",
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "overlap": {
+            "enum": [
+              "NO",
+              "PARTIAL",
+              "YES",
+              "UNKNOWN"
+            ],
+            "type": "string"
+          },
+          "face_id": {
+            "type": "string"
+          },
+          "detect_confidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "sharpness": {
+            "type": "number",
+            "format": "double"
+          },
+          "face_occluded": {
+            "type": "boolean"
+          },
+          "face_occluded_confidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "detection": {
+            "properties": {
+              "top": {
+                "type": "number",
+                "format": "double"
+              },
+              "left": {
+                "type": "number",
+                "format": "double"
+              },
+              "bottom": {
+                "type": "number",
+                "format": "double"
+              },
+              "right": {
+                "type": "number",
+                "format": "double"
+              }
+            },
+            "required": [
+              "top",
+              "left",
+              "bottom",
+              "right"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "size",
+          "top_left"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "UploadImageResponseDto": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The temporary URL of the image.\nThis URL should be provided when creating an animation via the /animations endpoint."
+          },
+          "id": {
+            "type": "string",
+            "description": "A unique identifier which represents this image operation"
+          },
+          "faces": {
+            "items": {
+              "properties": {
+                "size": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "Size of the square side",
+                  "minimum": 0
+                },
+                "top_left": {
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "type": "array",
+                  "description": "Top left location of the face in the frame - can be negative",
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "overlap": {
+                  "enum": [
+                    "NO",
+                    "PARTIAL",
+                    "YES",
+                    "UNKNOWN"
+                  ],
+                  "type": "string"
+                },
+                "face_id": {
+                  "type": "string"
+                },
+                "detect_confidence": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "sharpness": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "face_occluded": {
+                  "type": "boolean"
+                },
+                "face_occluded_confidence": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "detection": {
+                  "properties": {
+                    "top": {
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "left": {
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "bottom": {
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "right": {
+                      "type": "number",
+                      "format": "double"
+                    }
+                  },
+                  "required": [
+                    "top",
+                    "left",
+                    "bottom",
+                    "right"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "size",
+                "top_left"
+              ],
+              "type": "object",
+              "additionalProperties": false
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "JsonError": {
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "details": {}
+        },
+        "required": [
+          "kind",
+          "description"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "FaceRect": {
+        "properties": {
+          "top": {
+            "type": "number",
+            "format": "double"
+          },
+          "left": {
+            "type": "number",
+            "format": "double"
+          },
+          "bottom": {
+            "type": "number",
+            "format": "double"
+          },
+          "right": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "top",
+          "left",
+          "bottom",
+          "right"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ImageMetadata": {
+        "properties": {
+          "length": {
+            "type": "number",
+            "format": "double"
+          },
+          "height": {
+            "type": "number",
+            "format": "double"
+          },
+          "width": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "length",
+          "height",
+          "width"
+        ],
+        "type": "object"
+      },
+      "FaceDetectionDto": {
+        "properties": {
+          "faceCrops": {
+            "items": {
+              "properties": {
+                "top": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "left": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "bottom": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "right": {
+                  "type": "number",
+                  "format": "double"
+                }
+              },
+              "required": [
+                "top",
+                "left",
+                "bottom",
+                "right"
+              ],
+              "type": "object",
+              "additionalProperties": false
+            },
+            "type": "array"
+          },
+          "metadata": {
+            "properties": {
+              "length": {
+                "type": "number",
+                "format": "double"
+              },
+              "height": {
+                "type": "number",
+                "format": "double"
+              },
+              "width": {
+                "type": "number",
+                "format": "double"
+              }
+            },
+            "required": [
+              "length",
+              "height",
+              "width"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "faceCrops",
+          "metadata"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "FaceDetectionRequest": {
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "should_skip_detection": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source_url"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Record_string.any_": {
+        "properties": {},
+        "type": "object",
+        "description": "Construct a type with a set of properties K of type T"
+      },
+      "UploadAudioResponseDto": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The temporary URL of the audio.\nThis URL should be provided when creating an animation via the /animations endpoint."
+          },
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the audio.\nThis identifier should be used when deleting the audio via the /audio/{id} endpoint."
+          },
+          "duration": {
+            "type": "number",
+            "format": "double",
+            "description": "The duration of the audio in seconds"
+          },
+          "moderation_metadata": {
+            "description": "The audio moderation results metadata.",
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Providers.Microsoft": {
+        "enum": [
+          "microsoft"
+        ],
+        "type": "string"
+      },
+      "VoiceConfigMicrosoft": {
+        "properties": {
+          "style": {
+            "type": "string",
+            "description": "The style of the voice.\nAvailable styles change between voices."
+          },
+          "rate": {
+            "type": "string",
+            "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+            "example": "0.5"
+          },
+          "pitch": {
+            "type": "string",
+            "description": "The pitch of the voice.\nValue could be an absolute value in Hz (including units), a relative value in Hz or st(semitones)\nor a constant value from x-low/low/medium/high/x-high.",
+            "example": "+2st"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Microsoft_tts_provider": {
+        "description": "AzureMicrosoft provider details, contains the provider type and requested voice id and style",
+        "properties": {
+          "type": {
+            "enum": [
+              "microsoft"
+            ],
+            "type": "string"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/microsoft-azure",
+            "example": "en-US-JennyNeural",
+            "default": "en-US-JennyNeural"
+          },
+          "voice_config": {
+            "description": "Voice customization options",
+            "properties": {
+              "style": {
+                "type": "string",
+                "description": "The style of the voice.\nAvailable styles change between voices."
+              },
+              "rate": {
+                "type": "string",
+                "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                "example": "0.5"
+              },
+              "pitch": {
+                "type": "string",
+                "description": "The pitch of the voice.\nValue could be an absolute value in Hz (including units), a relative value in Hz or st(semitones)\nor a constant value from x-low/low/medium/high/x-high.",
+                "example": "+2st"
+              }
+            },
+            "type": "object",
+            "additionalProperties": false
+          },
+          "language": {
+            "type": "string",
+            "description": "Voice customization options. To save the language of the selected agent voice",
+            "example": "English (United States)"
+          }
+        },
+        "required": [
+          "type",
+          "voice_id"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Providers.Afflorithmics": {
+        "enum": [
+          "afflorithmics"
+        ],
+        "type": "string"
+      },
+      "VoiceConfigAfflorithmics": {
+        "properties": {
+          "rate": {
+            "type": "string",
+            "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+            "example": "1.2",
+            "default": "1"
+          },
+          "silencePadding": {
+            "type": "number",
+            "format": "double",
+            "description": "Amount of microseconds for silence padding. Half of the amount is inserted as silence at the beginning and at the end of each Speech file."
+          },
+          "voiceIntelligence": {
+            "type": "boolean",
+            "description": "Flag to apply lexicographical text corrections"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Afflorithmics_tts_provider": {
+        "description": "Afflorithmics provider details, contains the provider type and requested voice id, available for enterprise users.",
+        "properties": {
+          "type": {
+            "enum": [
+              "afflorithmics"
+            ],
+            "type": "string"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "The voice_id from the list of available voices.",
+            "example": "abc123DEF456",
+            "default": "abc123DEF456"
+          },
+          "voice_config": {
+            "description": "Voice customization options. Read more here: https://docs.audiostack.ai/reference/postspeech",
+            "properties": {
+              "rate": {
+                "type": "string",
+                "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                "example": "1.2",
+                "default": "1"
+              },
+              "silencePadding": {
+                "type": "number",
+                "format": "double",
+                "description": "Amount of microseconds for silence padding. Half of the amount is inserted as silence at the beginning and at the end of each Speech file."
+              },
+              "voiceIntelligence": {
+                "type": "boolean",
+                "description": "Flag to apply lexicographical text corrections"
+              }
+            },
+            "type": "object",
+            "additionalProperties": false
+          },
+          "language": {
+            "type": "string",
+            "description": "Voice customization options. To save the language of the selected agent voice",
+            "example": "English (United States)"
+          }
+        },
+        "required": [
+          "type",
+          "voice_id"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Providers.Elevenlabs": {
+        "enum": [
+          "elevenlabs"
+        ],
+        "type": "string"
+      },
+      "VoiceConfigElevenlabs": {
+        "properties": {
+          "stability": {
+            "type": "number",
+            "format": "double",
+            "description": "How stable the voice is and the randomness of each new generation.",
+            "example": "0"
+          },
+          "similarity_boost": {
+            "type": "number",
+            "format": "double",
+            "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it.",
+            "example": "0"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Elevenlabs_tts_provider": {
+        "description": "Elevenlabs provider details, contains the provider type and requested voice id, available for premium users.",
+        "properties": {
+          "type": {
+            "enum": [
+              "elevenlabs"
+            ],
+            "type": "string"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "The voice_id from the list of available voices. https://api.elevenlabs.io/v1/voices.",
+            "example": "21m00Tcm4TlvDq8ikWAM",
+            "default": "21m00Tcm4TlvDq8ikWAM"
+          },
+          "voice_config": {
+            "description": "Voice customization options. Read more here: https://docs.elevenlabs.io/speech-synthesis/voice-settings",
+            "properties": {
+              "stability": {
+                "type": "number",
+                "format": "double",
+                "description": "How stable the voice is and the randomness of each new generation.",
+                "example": "0"
+              },
+              "similarity_boost": {
+                "type": "number",
+                "format": "double",
+                "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it.",
+                "example": "0"
+              }
+            },
+            "type": "object",
+            "additionalProperties": false
+          },
+          "model_id": {
+            "type": "string",
+            "description": "The model id from the list of available models. https://elevenlabs.io/docs/speech-synthesis/models.",
+            "example": "eleven_multilingual_v2",
+            "default": "eleven_multilingual_v2"
+          },
+          "shouldAddDefaultOutputFormat": {
+            "type": "boolean",
+            "description": "Add default outputformat to the stream request if true"
+          }
+        },
+        "required": [
+          "type",
+          "voice_id"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Providers.Amazon": {
+        "enum": [
+          "amazon"
+        ],
+        "type": "string"
+      },
+      "VoiceIdsAmazon": {
+        "type": "string",
+        "enum": [
+          "Amy",
+          "Aria",
+          "Ayanda",
+          "Bianca",
+          "Brian",
+          "Camila",
+          "Emma",
+          "Gabrielle",
+          "Ivy",
+          "Joanna",
+          "Joey",
+          "Justin",
+          "Kendra",
+          "Kevin",
+          "Kimberly",
+          "Lea",
+          "Lucia",
+          "Lupe",
+          "Matthew",
+          "Olivia",
+          "Salli",
+          "Seoyeon",
+          "Takumi",
+          "Vicki"
+        ],
+        "nullable": false
+      },
+      "Amazon_tts_provider": {
+        "description": "Amazon provider details, contains the provider type and requested voice id",
+        "properties": {
+          "type": {
+            "enum": [
+              "amazon"
+            ],
+            "type": "string"
+          },
+          "voice_id": {
+            "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/text-to-speech-providers",
+            "example": "Joanna",
+            "type": "string",
+            "enum": [
+              "Amy",
+              "Aria",
+              "Ayanda",
+              "Bianca",
+              "Brian",
+              "Camila",
+              "Emma",
+              "Gabrielle",
+              "Ivy",
+              "Joanna",
+              "Joey",
+              "Justin",
+              "Kendra",
+              "Kevin",
+              "Kimberly",
+              "Lea",
+              "Lucia",
+              "Lupe",
+              "Matthew",
+              "Olivia",
+              "Salli",
+              "Seoyeon",
+              "Takumi",
+              "Vicki"
+            ],
+            "nullable": false
+          },
+          "language": {
+            "type": "string",
+            "description": "Voice customization options. To save the language of the selected agent voice",
+            "example": "English (United States)"
+          }
+        },
+        "required": [
+          "type",
+          "voice_id"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Providers.Google": {
+        "enum": [
+          "google"
+        ],
+        "type": "string"
+      },
+      "Google_tts_provider": {
+        "properties": {
+          "type": {
+            "enum": [
+              "google"
+            ],
+            "type": "string"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "The voice_id from the list of available voices.",
+            "example": "he-IL-Wavenet-A",
+            "default": "he-IL-Wavenet-A"
+          }
+        },
+        "required": [
+          "type",
+          "voice_id"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Providers.PlayHT": {
+        "enum": [
+          "playHT"
+        ],
+        "type": "string"
+      },
+      "PlayHT_tts_provider": {
+        "properties": {
+          "type": {
+            "enum": [
+              "playHT"
+            ],
+            "type": "string"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "The voice_id from the list of available voices.",
+            "example": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json",
+            "default": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json"
+          }
+        },
+        "required": [
+          "type",
+          "voice_id"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "TextToSpeechProviders": {
+        "anyOf": [
+          {
+            "description": "AzureMicrosoft provider details, contains the provider type and requested voice id and style",
+            "properties": {
+              "type": {
+                "enum": [
+                  "microsoft"
+                ],
+                "type": "string"
+              },
+              "voice_id": {
+                "type": "string",
+                "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/microsoft-azure",
+                "example": "en-US-JennyNeural",
+                "default": "en-US-JennyNeural"
+              },
+              "voice_config": {
+                "description": "Voice customization options",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "description": "The style of the voice.\nAvailable styles change between voices."
+                  },
+                  "rate": {
+                    "type": "string",
+                    "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                    "example": "0.5"
+                  },
+                  "pitch": {
+                    "type": "string",
+                    "description": "The pitch of the voice.\nValue could be an absolute value in Hz (including units), a relative value in Hz or st(semitones)\nor a constant value from x-low/low/medium/high/x-high.",
+                    "example": "+2st"
+                  }
+                },
+                "type": "object",
+                "additionalProperties": false
+              },
+              "language": {
+                "type": "string",
+                "description": "Voice customization options. To save the language of the selected agent voice",
+                "example": "English (United States)"
+              }
+            },
+            "required": [
+              "type",
+              "voice_id"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          },
+          {
+            "description": "Afflorithmics provider details, contains the provider type and requested voice id, available for enterprise users.",
+            "properties": {
+              "type": {
+                "enum": [
+                  "afflorithmics"
+                ],
+                "type": "string"
+              },
+              "voice_id": {
+                "type": "string",
+                "description": "The voice_id from the list of available voices.",
+                "example": "abc123DEF456",
+                "default": "abc123DEF456"
+              },
+              "voice_config": {
+                "description": "Voice customization options. Read more here: https://docs.audiostack.ai/reference/postspeech",
+                "properties": {
+                  "rate": {
+                    "type": "string",
+                    "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                    "example": "1.2",
+                    "default": "1"
+                  },
+                  "silencePadding": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "Amount of microseconds for silence padding. Half of the amount is inserted as silence at the beginning and at the end of each Speech file."
+                  },
+                  "voiceIntelligence": {
+                    "type": "boolean",
+                    "description": "Flag to apply lexicographical text corrections"
+                  }
+                },
+                "type": "object",
+                "additionalProperties": false
+              },
+              "language": {
+                "type": "string",
+                "description": "Voice customization options. To save the language of the selected agent voice",
+                "example": "English (United States)"
+              }
+            },
+            "required": [
+              "type",
+              "voice_id"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          },
+          {
+            "description": "Elevenlabs provider details, contains the provider type and requested voice id, available for premium users.",
+            "properties": {
+              "type": {
+                "enum": [
+                  "elevenlabs"
+                ],
+                "type": "string"
+              },
+              "voice_id": {
+                "type": "string",
+                "description": "The voice_id from the list of available voices. https://api.elevenlabs.io/v1/voices.",
+                "example": "21m00Tcm4TlvDq8ikWAM",
+                "default": "21m00Tcm4TlvDq8ikWAM"
+              },
+              "voice_config": {
+                "description": "Voice customization options. Read more here: https://docs.elevenlabs.io/speech-synthesis/voice-settings",
+                "properties": {
+                  "stability": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "How stable the voice is and the randomness of each new generation.",
+                    "example": "0"
+                  },
+                  "similarity_boost": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it.",
+                    "example": "0"
+                  }
+                },
+                "type": "object",
+                "additionalProperties": false
+              },
+              "model_id": {
+                "type": "string",
+                "description": "The model id from the list of available models. https://elevenlabs.io/docs/speech-synthesis/models.",
+                "example": "eleven_multilingual_v2",
+                "default": "eleven_multilingual_v2"
+              },
+              "shouldAddDefaultOutputFormat": {
+                "type": "boolean",
+                "description": "Add default outputformat to the stream request if true"
+              }
+            },
+            "required": [
+              "type",
+              "voice_id"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          },
+          {
+            "description": "Amazon provider details, contains the provider type and requested voice id",
+            "properties": {
+              "type": {
+                "enum": [
+                  "amazon"
+                ],
+                "type": "string"
+              },
+              "voice_id": {
+                "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/text-to-speech-providers",
+                "example": "Joanna",
+                "type": "string",
+                "enum": [
+                  "Amy",
+                  "Aria",
+                  "Ayanda",
+                  "Bianca",
+                  "Brian",
+                  "Camila",
+                  "Emma",
+                  "Gabrielle",
+                  "Ivy",
+                  "Joanna",
+                  "Joey",
+                  "Justin",
+                  "Kendra",
+                  "Kevin",
+                  "Kimberly",
+                  "Lea",
+                  "Lucia",
+                  "Lupe",
+                  "Matthew",
+                  "Olivia",
+                  "Salli",
+                  "Seoyeon",
+                  "Takumi",
+                  "Vicki"
+                ],
+                "nullable": false
+              },
+              "language": {
+                "type": "string",
+                "description": "Voice customization options. To save the language of the selected agent voice",
+                "example": "English (United States)"
+              }
+            },
+            "required": [
+              "type",
+              "voice_id"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "google"
+                ],
+                "type": "string"
+              },
+              "voice_id": {
+                "type": "string",
+                "description": "The voice_id from the list of available voices.",
+                "example": "he-IL-Wavenet-A",
+                "default": "he-IL-Wavenet-A"
+              }
+            },
+            "required": [
+              "type",
+              "voice_id"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "playHT"
+                ],
+                "type": "string"
+              },
+              "voice_id": {
+                "type": "string",
+                "description": "The voice_id from the list of available voices.",
+                "example": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json",
+                "default": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json"
+              }
+            },
+            "required": [
+              "type",
+              "voice_id"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "TextScript": {
+        "description": "Text script contains an input text to be spoken by the actor",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "nullable": false,
+            "description": "The type of the script."
+          },
+          "subtitles": {
+            "type": "boolean",
+            "description": "Should subtitles be created.",
+            "default": "false"
+          },
+          "provider": {
+            "description": "text-to-speech provider from list of supported providers. default is microsoft tts",
+            "anyOf": [
+              {
+                "description": "AzureMicrosoft provider details, contains the provider type and requested voice id and style",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "microsoft"
+                    ],
+                    "type": "string"
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/microsoft-azure",
+                    "example": "en-US-JennyNeural",
+                    "default": "en-US-JennyNeural"
+                  },
+                  "voice_config": {
+                    "description": "Voice customization options",
+                    "properties": {
+                      "style": {
+                        "type": "string",
+                        "description": "The style of the voice.\nAvailable styles change between voices."
+                      },
+                      "rate": {
+                        "type": "string",
+                        "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                        "example": "0.5"
+                      },
+                      "pitch": {
+                        "type": "string",
+                        "description": "The pitch of the voice.\nValue could be an absolute value in Hz (including units), a relative value in Hz or st(semitones)\nor a constant value from x-low/low/medium/high/x-high.",
+                        "example": "+2st"
+                      }
+                    },
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "Voice customization options. To save the language of the selected agent voice",
+                    "example": "English (United States)"
+                  }
+                },
+                "required": [
+                  "type",
+                  "voice_id"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              },
+              {
+                "description": "Afflorithmics provider details, contains the provider type and requested voice id, available for enterprise users.",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "afflorithmics"
+                    ],
+                    "type": "string"
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "description": "The voice_id from the list of available voices.",
+                    "example": "abc123DEF456",
+                    "default": "abc123DEF456"
+                  },
+                  "voice_config": {
+                    "description": "Voice customization options. Read more here: https://docs.audiostack.ai/reference/postspeech",
+                    "properties": {
+                      "rate": {
+                        "type": "string",
+                        "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                        "example": "1.2",
+                        "default": "1"
+                      },
+                      "silencePadding": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Amount of microseconds for silence padding. Half of the amount is inserted as silence at the beginning and at the end of each Speech file."
+                      },
+                      "voiceIntelligence": {
+                        "type": "boolean",
+                        "description": "Flag to apply lexicographical text corrections"
+                      }
+                    },
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "Voice customization options. To save the language of the selected agent voice",
+                    "example": "English (United States)"
+                  }
+                },
+                "required": [
+                  "type",
+                  "voice_id"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              },
+              {
+                "description": "Elevenlabs provider details, contains the provider type and requested voice id, available for premium users.",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "elevenlabs"
+                    ],
+                    "type": "string"
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "description": "The voice_id from the list of available voices. https://api.elevenlabs.io/v1/voices.",
+                    "example": "21m00Tcm4TlvDq8ikWAM",
+                    "default": "21m00Tcm4TlvDq8ikWAM"
+                  },
+                  "voice_config": {
+                    "description": "Voice customization options. Read more here: https://docs.elevenlabs.io/speech-synthesis/voice-settings",
+                    "properties": {
+                      "stability": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "How stable the voice is and the randomness of each new generation.",
+                        "example": "0"
+                      },
+                      "similarity_boost": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it.",
+                        "example": "0"
+                      }
+                    },
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  "model_id": {
+                    "type": "string",
+                    "description": "The model id from the list of available models. https://elevenlabs.io/docs/speech-synthesis/models.",
+                    "example": "eleven_multilingual_v2",
+                    "default": "eleven_multilingual_v2"
+                  },
+                  "shouldAddDefaultOutputFormat": {
+                    "type": "boolean",
+                    "description": "Add default outputformat to the stream request if true"
+                  }
+                },
+                "required": [
+                  "type",
+                  "voice_id"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              },
+              {
+                "description": "Amazon provider details, contains the provider type and requested voice id",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "amazon"
+                    ],
+                    "type": "string"
+                  },
+                  "voice_id": {
+                    "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/text-to-speech-providers",
+                    "example": "Joanna",
+                    "type": "string",
+                    "enum": [
+                      "Amy",
+                      "Aria",
+                      "Ayanda",
+                      "Bianca",
+                      "Brian",
+                      "Camila",
+                      "Emma",
+                      "Gabrielle",
+                      "Ivy",
+                      "Joanna",
+                      "Joey",
+                      "Justin",
+                      "Kendra",
+                      "Kevin",
+                      "Kimberly",
+                      "Lea",
+                      "Lucia",
+                      "Lupe",
+                      "Matthew",
+                      "Olivia",
+                      "Salli",
+                      "Seoyeon",
+                      "Takumi",
+                      "Vicki"
+                    ],
+                    "nullable": false
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "Voice customization options. To save the language of the selected agent voice",
+                    "example": "English (United States)"
+                  }
+                },
+                "required": [
+                  "type",
+                  "voice_id"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "google"
+                    ],
+                    "type": "string"
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "description": "The voice_id from the list of available voices.",
+                    "example": "he-IL-Wavenet-A",
+                    "default": "he-IL-Wavenet-A"
+                  }
+                },
+                "required": [
+                  "type",
+                  "voice_id"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "playHT"
+                    ],
+                    "type": "string"
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "description": "The voice_id from the list of available voices.",
+                    "example": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json",
+                    "default": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json"
+                  }
+                },
+                "required": [
+                  "type",
+                  "voice_id"
+                ],
+                "type": "object",
+                "additionalProperties": false
+              }
+            ]
+          },
+          "input": {
+            "type": "string",
+            "description": "The input text that will be synthesized to an audio file.\nNote that each provider has its own limitations on the text length.",
+            "example": "This is an example text",
+            "maxLength": 40000,
+            "minLength": 3
+          },
+          "ssml": {
+            "type": "boolean",
+            "description": "Is the text provided in ssml form.",
+            "default": "false"
+          }
+        },
+        "required": [
+          "type",
+          "input"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CreateTtsFileDto": {
+        "properties": {
+          "script": {
+            "description": "The script to be converted to audio.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ],
+                "nullable": false,
+                "description": "The type of the script."
+              },
+              "subtitles": {
+                "type": "boolean",
+                "description": "Should subtitles be created.",
+                "default": "false"
+              },
+              "provider": {
+                "description": "text-to-speech provider from list of supported providers. default is microsoft tts",
+                "anyOf": [
+                  {
+                    "description": "AzureMicrosoft provider details, contains the provider type and requested voice id and style",
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "microsoft"
+                        ],
+                        "type": "string"
+                      },
+                      "voice_id": {
+                        "type": "string",
+                        "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/microsoft-azure",
+                        "example": "en-US-JennyNeural",
+                        "default": "en-US-JennyNeural"
+                      },
+                      "voice_config": {
+                        "description": "Voice customization options",
+                        "properties": {
+                          "style": {
+                            "type": "string",
+                            "description": "The style of the voice.\nAvailable styles change between voices."
+                          },
+                          "rate": {
+                            "type": "string",
+                            "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                            "example": "0.5"
+                          },
+                          "pitch": {
+                            "type": "string",
+                            "description": "The pitch of the voice.\nValue could be an absolute value in Hz (including units), a relative value in Hz or st(semitones)\nor a constant value from x-low/low/medium/high/x-high.",
+                            "example": "+2st"
+                          }
+                        },
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "language": {
+                        "type": "string",
+                        "description": "Voice customization options. To save the language of the selected agent voice",
+                        "example": "English (United States)"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "voice_id"
+                    ],
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  {
+                    "description": "Afflorithmics provider details, contains the provider type and requested voice id, available for enterprise users.",
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "afflorithmics"
+                        ],
+                        "type": "string"
+                      },
+                      "voice_id": {
+                        "type": "string",
+                        "description": "The voice_id from the list of available voices.",
+                        "example": "abc123DEF456",
+                        "default": "abc123DEF456"
+                      },
+                      "voice_config": {
+                        "description": "Voice customization options. Read more here: https://docs.audiostack.ai/reference/postspeech",
+                        "properties": {
+                          "rate": {
+                            "type": "string",
+                            "description": "The speed of the voice.\nThe value is relative to 1, 0.5 being half speed, 2 being twice as fast, etc.\nAnother option is a constant value from x-slow/slow/medium/fast/x-fast.",
+                            "example": "1.2",
+                            "default": "1"
+                          },
+                          "silencePadding": {
+                            "type": "number",
+                            "format": "double",
+                            "description": "Amount of microseconds for silence padding. Half of the amount is inserted as silence at the beginning and at the end of each Speech file."
+                          },
+                          "voiceIntelligence": {
+                            "type": "boolean",
+                            "description": "Flag to apply lexicographical text corrections"
+                          }
+                        },
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "language": {
+                        "type": "string",
+                        "description": "Voice customization options. To save the language of the selected agent voice",
+                        "example": "English (United States)"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "voice_id"
+                    ],
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  {
+                    "description": "Elevenlabs provider details, contains the provider type and requested voice id, available for premium users.",
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "elevenlabs"
+                        ],
+                        "type": "string"
+                      },
+                      "voice_id": {
+                        "type": "string",
+                        "description": "The voice_id from the list of available voices. https://api.elevenlabs.io/v1/voices.",
+                        "example": "21m00Tcm4TlvDq8ikWAM",
+                        "default": "21m00Tcm4TlvDq8ikWAM"
+                      },
+                      "voice_config": {
+                        "description": "Voice customization options. Read more here: https://docs.elevenlabs.io/speech-synthesis/voice-settings",
+                        "properties": {
+                          "stability": {
+                            "type": "number",
+                            "format": "double",
+                            "description": "How stable the voice is and the randomness of each new generation.",
+                            "example": "0"
+                          },
+                          "similarity_boost": {
+                            "type": "number",
+                            "format": "double",
+                            "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it.",
+                            "example": "0"
+                          }
+                        },
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "model_id": {
+                        "type": "string",
+                        "description": "The model id from the list of available models. https://elevenlabs.io/docs/speech-synthesis/models.",
+                        "example": "eleven_multilingual_v2",
+                        "default": "eleven_multilingual_v2"
+                      },
+                      "shouldAddDefaultOutputFormat": {
+                        "type": "boolean",
+                        "description": "Add default outputformat to the stream request if true"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "voice_id"
+                    ],
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  {
+                    "description": "Amazon provider details, contains the provider type and requested voice id",
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "amazon"
+                        ],
+                        "type": "string"
+                      },
+                      "voice_id": {
+                        "description": "The voice_id from the list of available voices.\nFor full list of voice_ids: https://docs.d-id.com/reference/text-to-speech-providers",
+                        "example": "Joanna",
+                        "type": "string",
+                        "enum": [
+                          "Amy",
+                          "Aria",
+                          "Ayanda",
+                          "Bianca",
+                          "Brian",
+                          "Camila",
+                          "Emma",
+                          "Gabrielle",
+                          "Ivy",
+                          "Joanna",
+                          "Joey",
+                          "Justin",
+                          "Kendra",
+                          "Kevin",
+                          "Kimberly",
+                          "Lea",
+                          "Lucia",
+                          "Lupe",
+                          "Matthew",
+                          "Olivia",
+                          "Salli",
+                          "Seoyeon",
+                          "Takumi",
+                          "Vicki"
+                        ],
+                        "nullable": false
+                      },
+                      "language": {
+                        "type": "string",
+                        "description": "Voice customization options. To save the language of the selected agent voice",
+                        "example": "English (United States)"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "voice_id"
+                    ],
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  {
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "google"
+                        ],
+                        "type": "string"
+                      },
+                      "voice_id": {
+                        "type": "string",
+                        "description": "The voice_id from the list of available voices.",
+                        "example": "he-IL-Wavenet-A",
+                        "default": "he-IL-Wavenet-A"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "voice_id"
+                    ],
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  {
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "playHT"
+                        ],
+                        "type": "string"
+                      },
+                      "voice_id": {
+                        "type": "string",
+                        "description": "The voice_id from the list of available voices.",
+                        "example": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json",
+                        "default": "s3://voice-cloning-zero-shot/d82d246c-148b-457f-9668-37b789520891/adolfosaad/manifest.json"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "voice_id"
+                    ],
+                    "type": "object",
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "input": {
+                "type": "string",
+                "description": "The input text that will be synthesized to an audio file.\nNote that each provider has its own limitations on the text length.",
+                "example": "This is an example text",
+                "maxLength": 40000,
+                "minLength": 3
+              },
+              "ssml": {
+                "type": "boolean",
+                "description": "Is the text provided in ssml form.",
+                "default": "false"
+              }
+            },
+            "required": [
+              "type",
+              "input"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "script"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CreditsItem": {
+        "properties": {
+          "owner_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "modified_at": {
+            "type": "string"
+          },
+          "remaining": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "expire_at": {
+            "type": "string"
+          },
+          "valid_from": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "price_id": {
+            "type": "string"
+          },
+          "plan_group": {
+            "type": "string"
+          },
+          "product_billing_interval": {
+            "type": "string",
+            "enum": [
+              "month",
+              "year"
+            ]
+          }
+        },
+        "required": [
+          "owner_id",
+          "created_at",
+          "modified_at",
+          "remaining",
+          "total",
+          "expire_at"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "UserCredits": {
+        "properties": {
+          "credits": {
+            "items": {
+              "properties": {
+                "owner_id": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "modified_at": {
+                  "type": "string"
+                },
+                "remaining": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "total": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "expire_at": {
+                  "type": "string"
+                },
+                "valid_from": {
+                  "type": "string"
+                },
+                "product_id": {
+                  "type": "string"
+                },
+                "price_id": {
+                  "type": "string"
+                },
+                "plan_group": {
+                  "type": "string"
+                },
+                "product_billing_interval": {
+                  "type": "string",
+                  "enum": [
+                    "month",
+                    "year"
+                  ]
+                }
+              },
+              "required": [
+                "owner_id",
+                "created_at",
+                "modified_at",
+                "remaining",
+                "total",
+                "expire_at"
+              ],
+              "type": "object",
+              "additionalProperties": false
+            },
+            "type": "array"
+          },
+          "remaining": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "credits",
+          "remaining",
+          "total"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Logo": {
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "position": {
+            "items": {
+              "type": "number",
+              "format": "double"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "url",
+          "position"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "VoiceAccess": {
+        "enum": [
+          "public",
+          "premium",
+          "private",
+          "external-private"
+        ],
+        "type": "string"
+      },
+      "Providers": {
+        "enum": [
+          "amazon",
+          "microsoft",
+          "afflorithmics",
+          "elevenlabs",
+          "google",
+          "playHT"
+        ],
+        "type": "string"
+      },
+      "IVoice": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "string"
+          },
+          "access": {
+            "enum": [
+              "public",
+              "premium",
+              "private",
+              "external-private"
+            ],
+            "type": "string"
+          },
+          "provider": {
+            "enum": [
+              "amazon",
+              "microsoft",
+              "afflorithmics",
+              "elevenlabs",
+              "google",
+              "playHT"
+            ],
+            "type": "string"
+          },
+          "styles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "language": {
+            "type": "string"
+          },
+          "accent": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          },
+          "useCase": {
+            "type": "string"
+          },
+          "previewUrl": {
+            "type": "string"
+          },
+          "config": {}
+        },
+        "required": [
+          "id",
+          "name",
+          "gender",
+          "locale",
+          "access",
+          "provider",
+          "styles",
+          "language"
+        ],
+        "type": "object",
+        "additionalProperties": true
+      },
+      "JsonError1": {
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "details": {}
+        },
+        "required": [
+          "kind",
+          "description"
+        ],
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "responses": {},
+    "parameters": {},
+    "examples": {},
+    "requestBodies": {},
+    "headers": {},
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

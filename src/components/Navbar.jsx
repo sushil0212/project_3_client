@@ -1,11 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/auth.context";
+import NotificationIcon from "./NotificationIcon";
 
 const Navbar = () => {
   const { user, loading, logout } = useContext(AuthContext);
   return (
     <nav className="Navbar">
+      <NotificationIcon />
       <p>{user ? user.username : ""}</p>
       {user && (
         <img
@@ -43,6 +45,8 @@ const Navbar = () => {
           </>
         )}
       </ul>
+
+      <Link to="/dashboard">Dashboard</Link>
     </nav>
   );
 };

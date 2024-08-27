@@ -5,16 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 function Activity() {
   const { user } = useContext(AuthContext);
-
   const navigate = useNavigate();
 
   const goToJobsAds = () => {
     if (user.companyInfo) {
       navigate(`/vacancy-required/${user.companyInfo}`);
-      return;
+    } else {
+      navigate("/jobs-ads");
     }
-
-    navigate("/jobs-ads");
   };
 
   const goToShorts = () => {
