@@ -1,58 +1,3 @@
-/* import { Link, NavLink } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../contexts/auth.context";
-import NotificationIcon from "./NotificationIcon";
-
-const Navbar = () => {
-  const { user, loading, logout } = useContext(AuthContext);
-  return (
-    <nav className="Navbar">
-      <NotificationIcon />
-      <p>{user ? user.username : ""}</p>
-      {user && (
-        <img
-          src={user.profilePic}
-          height={70}
-          alt="Profile"
-        />
-      )}
-      <ul>
-        <NavLink
-          className={({ isActive }) => (isActive ? "selected" : "")}
-          to="/">
-          Home
-        </NavLink>
-        {user && (
-          <NavLink
-            className={({ isActive }) => (isActive ? "selected" : "")}
-            to="/profile">
-            Profile
-          </NavLink>
-        )}
-        {!loading && user && (
-          <>
-            <button onClick={logout}>Logout</button>
-          </>
-        )}
-        {!loading && !user && (
-          <>
-            <Link to="/signup">
-              <button>Signup</button>
-            </Link>
-            <Link to="/login">
-              <button>Login</button>
-            </Link>
-          </>
-        )}
-      </ul>
-
-      <Link to="/dashboard">Dashboard</Link>
-    </nav>
-  );
-};
-export default Navbar;
- */
-
 import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/auth.context";
@@ -60,6 +5,7 @@ import NotificationIcon from "./NotificationIcon";
 
 const Navbar = () => {
   const { user, loading, logout } = useContext(AuthContext);
+  const showDashboardLink = user && user.companyInfo;
 
   return (
     <nav className="bg-blue-600 text-white p-4 shadow-lg fixed top-0 w-full z-50">
@@ -69,7 +15,7 @@ const Navbar = () => {
           <Link
             to="/"
             className="text-xl font-bold hover:text-gray-200 transition">
-            Homepage
+            Home
           </Link>
           {/* Notification Icon */}
           <NotificationIcon className="hover:text-gray-200 transition" />
@@ -88,15 +34,17 @@ const Navbar = () => {
                 }>
                 Profile
               </NavLink>
-              <NavLink
-                to="/dashboard"
-                className={({ isActive }) =>
-                  `hover:text-gray-200 transition ${
-                    isActive ? "text-gray-300" : ""
-                  }`
-                }>
-                Dashboard
-              </NavLink>
+              {showDashboardLink && (
+                <NavLink
+                  to="/dashboard"
+                  className={({ isActive }) =>
+                    `hover:text-gray-200 transition ${
+                      isActive ? "text-gray-300" : ""
+                    }`
+                  }>
+                  Dashboard
+                </NavLink>
+              )}
             </>
           )}
         </ul>
@@ -105,11 +53,13 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           {user && (
             <>
-              <img
-                src={user.profilePic}
-                alt="Profile"
-                className="w-10 h-10 rounded-full border-2 border-white"
-              />
+              {user.profilePic && (
+                <img
+                  src={user.profilePic}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full border-2 border-white"
+                />
+              )}
               <p className="text-sm">{user.username}</p>
               <button
                 onClick={logout}
