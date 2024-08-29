@@ -7,7 +7,7 @@ function Anon({ children }) {
 
   if (loading) return <p>Loading...</p>;
   if (user) {
-    return <Navigate to="/" />;
+    return <Navigate to="/profile" />;
   } else {
     return children;
   }
