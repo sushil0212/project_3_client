@@ -10,18 +10,16 @@ const Navbar = () => {
   return (
     <nav className="bg-blue-600 text-white p-4 shadow-lg fixed top-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Left side: Logo and Home link */}
         <div className="flex items-center space-x-4">
           <Link
             to="/"
             className="text-xl font-bold hover:text-gray-200 transition">
             Home
           </Link>
-          {/* Notification Icon */}
+
           <NotificationIcon className="hover:text-gray-200 transition" />
         </div>
 
-        {/* Middle: Conditional User Profile and Links */}
         <ul className="flex items-center space-x-6">
           {user && (
             <>
@@ -49,7 +47,6 @@ const Navbar = () => {
           )}
         </ul>
 
-        {/* Right side: Authentication buttons */}
         <div className="flex items-center space-x-4">
           {user && (
             <>

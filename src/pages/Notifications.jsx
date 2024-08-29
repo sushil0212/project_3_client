@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../contexts/auth.context";
 import axios from "axios";
 
 function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [message, setMessage] = useState("");
   const token = localStorage.getItem("authToken");
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -106,7 +108,7 @@ function Notifications() {
               className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-4 rounded-lg">
               Mark as Read
             </button>
-            {notification.type === "cv_uploaded" && (
+            {notification.type === "cv_uploaded" && user.companyInfo && (
               <div className="mt-4">
                 <input
                   type="text"
