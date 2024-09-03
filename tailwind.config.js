@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        "rotate-360": "rotate360 20s linear infinite", // Slow 360-degree rotation
-        "glow-and-move": "glowMove 10s ease-in-out infinite", // Sparkling stars and sun glow with movement
-        "pulse-on-hover": "pulseHover 0.5s ease-in-out infinite", // Unique hover effect
+        "rotate-360": "rotate360 20s linear infinite",
+        "glow-and-move": "glowMove 10s ease-in-out infinite",
+        "pulse-on-hover": "pulseHover 0.5s ease-in-out infinite",
       },
       keyframes: {
         rotate360: {

@@ -25,6 +25,7 @@ function HomePage() {
           alt="App Logo"
           className="animate-rotate-360 w-3/5 max-w-xs md:max-w-md transition-all duration-500 ease-in-out cursor-pointer hover:animate-pulse"
           onClick={handleLogoClick}
+          
         />
       </div>
       <h1 className="text-white text-2xl mt-4">Welcome to NepApp Job Ads</h1>

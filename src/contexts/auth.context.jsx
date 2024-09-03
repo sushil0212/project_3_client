@@ -53,11 +53,6 @@ function AuthProviderWrapper(props) {
     authenticateUser();
   };
 
-  /*   useEffect(() => {
-    console.log("useEffect: Mounting");
-    getProjects();
-  }, []);
- */
 
   useEffect(() => {
     authenticateUser();

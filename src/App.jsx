@@ -25,7 +25,7 @@ import Notifications from "./pages/Notifications";
 import Dashboard from "./pages/Dashboard";
 import About from "./components/About";
 
-
+import SavedShorts from "./components/SavedShorts";
 
 function App() {
   const location = useLocation();
@@ -131,6 +131,11 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        <Route
+          path="/saved-shorts"
+          element={<SavedShorts />}
+        />
       </Routes>
 
       {showNavbar && <Navbar />}
@@ -139,3 +144,4 @@ function App() {
 }
 
 export default App;
+ 
